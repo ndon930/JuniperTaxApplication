@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxService", "TaxService\Ta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxServiceTest", "TaxServiceTest\TaxServiceTest.csproj", "{3A90B5B8-D66B-4FC5-8AD4-0A6D261050F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxCalculatorTest", "TaxCalculatorTest\TaxCalculatorTest.csproj", "{7AC2C99E-78B3-433A-B3E5-5140D2727665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxCalculatorTest", "TaxCalculatorTest\TaxCalculatorTest.csproj", "{7AC2C99E-78B3-433A-B3E5-5140D2727665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{3CCBA46F-AEB8-4BE4-BE3E-EFF9C69AE75A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7AC2C99E-78B3-433A-B3E5-5140D2727665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AC2C99E-78B3-433A-B3E5-5140D2727665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AC2C99E-78B3-433A-B3E5-5140D2727665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CCBA46F-AEB8-4BE4-BE3E-EFF9C69AE75A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CCBA46F-AEB8-4BE4-BE3E-EFF9C69AE75A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CCBA46F-AEB8-4BE4-BE3E-EFF9C69AE75A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CCBA46F-AEB8-4BE4-BE3E-EFF9C69AE75A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
