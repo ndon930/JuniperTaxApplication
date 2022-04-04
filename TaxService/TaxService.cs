@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Collections.Specialized;
-using TaxCalculator;
+using BusinessObjects.TaxCalculator;
+using BusinessObjects.Log;
 
 public class TaxService
 {
