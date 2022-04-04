@@ -11,73 +11,30 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using BusinessObjects.APIClients;
 
 namespace BusinessObjects.TaxCalculator
 {
     public class TaxJarCalculator : ITaxCalculator
     {
-        public class ApiClient
-        {
-            public static class ApiClientConstant
-            {
-                public const string DefaultBaseUrl = "https://api.taxjar.com";
-                public const string DefaultApiVersion = "v2";
-                public const string DefaultApiToken = "5da2f821eee4035db4771edab942a4cc";
-
-                public const string TaxJarAPIBaseURLKey = "TaxJarAPIBaseURL";
-                public const string TaxJarApiVersionKey = "TaxJarApiVersion";
-                public const string TaxJarAPITokenKey = "TaxJarAPIToken";
-            }
-
-            public string APIBaseUrl { get; set; }
-            public string APIToken { get; set; }
-            public string APIURL { get; set; }
-            public string APIVersion { get; set; }
-            
-            private static HttpClient? Client { get; set; }
-            public ILog? Log { get; set; }
-            public ApiClient(ILog? log = null)
-            {
-                APIBaseUrl = ConfigurationManager.AppSettings.Get(ApiClientConstant.TaxJarAPIBaseURLKey) ?? ApiClientConstant.DefaultBaseUrl;
-                APIVersion = ConfigurationManager.AppSettings.Get(ApiClientConstant.TaxJarApiVersionKey) ??  ApiClientConstant.DefaultApiVersion;
-                APIToken = ConfigurationManager.AppSettings.Get(ApiClientConstant.TaxJarAPITokenKey) ?? ApiClientConstant.DefaultApiToken;
-                APIURL = APIBaseUrl + "/" + APIVersion;
-
-                if (log != null)
-                    Log = log;
-
-                WinHttpHandler handler = new WinHttpHandler();
-                Client = new HttpClient(handler);
-            }
-
-            public virtual T SendGet<T>(string url)
-            {
-
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri($"{APIURL}/{url}"),
-                };
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", APIToken);
-
-                using (HttpResponseMessage response = Client.SendAsync(request).Result)
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);
-                }
-            }
-        }
-
         public ApiClient Client { get; set; }
 
         ILog? Log { get; set; }
 
-        public TaxJarCalculator(ILog? log = null)
+        /// <summary>
+        /// Instantiate client for tax jar calculator. 
+        /// </summary>
+        /// <param name="log">logger object</param>
+        /// <param name="baseURL">Base url for the client</param>
+        /// <param name="version">Version the api client will use</param>
+        /// <param name="apiToken">bearer token needed for the client</param>
+        public TaxJarCalculator(ILog? log = null, string baseURL = "", string version = "", string apiToken = "")
         {
-            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : MethodBase.GetCurrentMethod().Name;
+            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : $"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}";
             try
             {
                 Log = log;
-                Client = new ApiClient(log);
+                Client = new ApiClient(log, baseURL, version, apiToken);
             }
             catch (Exception e) 
             { 
@@ -101,18 +58,18 @@ namespace BusinessObjects.TaxCalculator
         /// <exception cref="Exception">Missing Zip</exception>
         public APILocationRatesResponseMessage GetLocationTaxRate(ILocation location)
         {
-            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : MethodBase.GetCurrentMethod().Name;
+            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : $"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}";
             try
             {
                 Dictionary<string, string> parameters = location.GetTaxRateParameter();
-                if (!parameters.ContainsKey("Zip"))
+                if (!parameters.ContainsKey("zip"))
                 {
                     throw new Exception("Missing Zip in dictionary");
                 }
-                string uri = $"rates/{parameters["Zip"]}?";
+                string uri = $"rates/{parameters["zip"]}?";
                 foreach (KeyValuePair<string, string> pair in parameters)
                 {
-                    if (pair.Key == "Zip")
+                    if (pair.Key == "zip")
                         continue;
                     else
                         uri += $"{pair.Key}={pair.Value}&";

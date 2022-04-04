@@ -82,13 +82,13 @@ namespace BusinessObjects.Location
             Dictionary<string, string> taxRateData = base.GetTaxRateParameter();
 
             if (!string.IsNullOrEmpty(State))
-                taxRateData.Add("State", State);
+                taxRateData.Add("state", State);
 
             if (!string.IsNullOrEmpty(City))
-                taxRateData.Add("City", City);
+                taxRateData.Add("city", City);
 
             if (!string.IsNullOrEmpty(Street))
-                taxRateData.Add("Street", Street);
+                taxRateData.Add("street", Street);
 
             return taxRateData;
         }

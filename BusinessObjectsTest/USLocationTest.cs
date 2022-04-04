@@ -17,12 +17,12 @@ namespace BusinessObjectsTest
         public void TestNewLocation()
         { 
             USLocation testLocation = new USLocation(zip, state, city, street) ;
-            Assert.AreEqual(testLocation.LocationData.Count, 5);
-            Assert.AreEqual(testLocation.Zip, zip);
-            Assert.AreEqual(testLocation.City, city);
-            Assert.AreEqual(testLocation.Street, street);
-            Assert.AreEqual(testLocation.State, state);
-            Assert.AreEqual(testLocation.Country, "US");
+            Assert.AreEqual(5, testLocation.LocationData.Count);
+            Assert.AreEqual(zip, testLocation.Zip);
+            Assert.AreEqual(city, testLocation.City);
+            Assert.AreEqual(street, testLocation.Street);
+            Assert.AreEqual(state, testLocation.State);
+            Assert.AreEqual("US", testLocation.Country);
         }
 
         [Test]
@@ -32,16 +32,16 @@ namespace BusinessObjectsTest
             Dictionary<string, string> taxRateData = testLocation.GetTaxRateParameter();
 
             Assert.AreEqual(taxRateData.Count, 5);
-            Assert.IsTrue(taxRateData.ContainsKey("Zip"));
-            Assert.AreEqual(taxRateData["Zip"], zip);
-            Assert.IsTrue(taxRateData.ContainsKey("City"));
-            Assert.AreEqual(taxRateData["City"], city);
-            Assert.IsTrue(taxRateData.ContainsKey("Street"));
-            Assert.AreEqual(taxRateData["Street"], street);
-            Assert.IsTrue(taxRateData.ContainsKey("State"));
-            Assert.AreEqual(taxRateData["State"], state);
-            Assert.IsTrue(taxRateData.ContainsKey("Country"));
-            Assert.AreEqual(taxRateData["Country"], "US");
+            Assert.IsTrue(taxRateData.ContainsKey("zip"));
+            Assert.IsTrue(taxRateData.ContainsKey("city"));
+            Assert.IsTrue(taxRateData.ContainsKey("street"));
+            Assert.IsTrue(taxRateData.ContainsKey("state"));
+            Assert.IsTrue(taxRateData.ContainsKey("country"));
+            Assert.AreEqual(zip, taxRateData["zip"]);
+            Assert.AreEqual(city, taxRateData["city"]);
+            Assert.AreEqual(street, taxRateData["street"]);
+            Assert.AreEqual(state, taxRateData["state"]);
+            Assert.AreEqual("US", taxRateData["country"]);
         }
     }
 }

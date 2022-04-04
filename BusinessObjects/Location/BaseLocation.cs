@@ -72,10 +72,10 @@ namespace BusinessObjects.Location
             Dictionary<string, string> taxRateData = new Dictionary<string, string>();
 
             if (!string.IsNullOrEmpty(Country))
-                taxRateData.Add("Country", Country);
+                taxRateData.Add("country", Country);
 
             if (!string.IsNullOrEmpty(Zip))
-                taxRateData.Add("Zip", Zip);
+                taxRateData.Add("zip", Zip);
 
             return taxRateData;
         }

@@ -35,7 +35,7 @@ namespace BusinessObjects.Log
         /// <param name="message">Message to Log</param>
         public void LogInfo(string message)
         {
-            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : MethodBase.GetCurrentMethod().Name;
+            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : $"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}";
 
             try
             {
@@ -47,8 +47,8 @@ namespace BusinessObjects.Log
                     dir.Create();
                 }
 
-                using StreamWriter sw = new StreamWriter($"{dir.FullName}/{Name}.log");
-                sw.WriteLine(currentDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") +": {message}");
+                using StreamWriter sw = new StreamWriter($"{dir.FullName}/{Name}.log",true);
+                sw.WriteLine(currentDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") +$": {message}");
                 sw.Close();
             }
             catch (Exception e) { this.LogException(methodName, e.Message); };
@@ -71,7 +71,7 @@ namespace BusinessObjects.Log
                     dir.Create();
                 }
 
-                using StreamWriter sw = new StreamWriter($"{dir.FullName}/{ErrorLogFileName}.log");
+                using StreamWriter sw = new StreamWriter($"{dir.FullName}/{ErrorLogFileName}.log", true);
                 sw.WriteLine(currentDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + $": Method [{methodName}] \n Message: {message}" );
                 sw.Close();
             }
