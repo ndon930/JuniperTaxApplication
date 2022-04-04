@@ -26,6 +26,12 @@
         /// </summary>
         /// <param name="message">The message to log</param>
         public void LogInfo(string message);
+
+        /// <summary>
+        /// Log Exception to the Error file. 
+        /// </summary>
+        /// <param name="message">The message to log</param>
+        public void LogException(string methodName, string message);
         #endregion
     }
 }

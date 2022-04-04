@@ -2,6 +2,10 @@
 {
     public interface ILocation
     {
-        public string GetCountry { get; set; }
+        /// <summary>
+        /// Retrieve the information needed for tax rate retrieval. 
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<string,string> GetTaxRateParameter();
     }
 }
