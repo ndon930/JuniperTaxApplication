@@ -6,7 +6,12 @@ namespace BusinessObjects.Order
     {
         ILocation? ToLocation { get; set; }
         ILocation? FromLocation { get; set; }
+        List<OrderLineItem> LineItems { get; set; }
 
-        Dictionary<string, int>? LineItems { get; set; }
+        /// <summary>
+        /// This method will return object needed for the API Call
+        /// </summary>
+        /// <returns></returns>
+        object GetJsonObjectForOrderTaxAPICall();
     }
 }

@@ -12,7 +12,6 @@ namespace BusinessObjectsTest
         string zip = "00150";
         string country = "FI";
         string city = "Helsinki";
-        string street = "FI";
         [Test]
         public void TestNewLocation()
         {
@@ -27,7 +26,7 @@ namespace BusinessObjectsTest
         public void TestGetTaxRateParameters()
         {
             EULocation testLocation = new EULocation(zip, country, city);
-            Dictionary<string, string> taxRateData = testLocation.GetTaxRateParameter();
+            Dictionary<string, string> taxRateData = testLocation.GetLocationTaxRateParameter();
 
             Assert.AreEqual(taxRateData.Count, 3);
             Assert.IsTrue(taxRateData.ContainsKey("zip"));

@@ -40,8 +40,7 @@ namespace BusinessObjects.APIClients
             if (log != null)
                 Log = log;
 
-            WinHttpHandler handler = new WinHttpHandler();
-            Client = new HttpClient(handler);
+            Client = new HttpClient();
         }
 
         public virtual T SendGet<T>(string url)
@@ -57,6 +56,48 @@ namespace BusinessObjects.APIClients
                 Log.LogInfo($"Calling: { APIURL}/{ url}");
             try
             {
+                using (HttpResponseMessage response = Client.SendAsync(request).Result)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        if (Log != null)
+                            Log.LogInfo($"Received: {response.Content.ReadAsStringAsync().Result}");
+
+                        return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);
+                    }
+                    else
+                    {
+                        throw new Exception($"Response Code Returned :{response.StatusCode}, Error: {response.ReasonPhrase}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log != null)
+                    Log.LogException(methodName, ex.ToString());
+
+                throw new Exception($"{ex.ToString}: {ex.StackTrace}");
+            }
+        }
+
+        public virtual T SendPost<T>(string url, object body = null)
+        {
+            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : $"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}";
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{APIURL}/{url}"),
+                Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json")
+            };
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", APIToken);
+            if (Log != null)
+                Log.LogInfo($"Calling: {APIURL}/{ url}");
+            try
+            {
+                if (Log != null)
+                {
+                    Log.LogInfo($"json data: { JsonConvert.SerializeObject(body) }");
+                }
                 using (HttpResponseMessage response = Client.SendAsync(request).Result)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)

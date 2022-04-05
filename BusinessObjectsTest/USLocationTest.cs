@@ -16,7 +16,7 @@ namespace BusinessObjectsTest
         [Test]
         public void TestNewLocation()
         { 
-            USLocation testLocation = new USLocation(zip, state, city, street) ;
+            USLocation testLocation = new USLocation(zip, state, city, street);
             Assert.AreEqual(5, testLocation.LocationData.Count);
             Assert.AreEqual(zip, testLocation.Zip);
             Assert.AreEqual(city, testLocation.City);
@@ -29,9 +29,9 @@ namespace BusinessObjectsTest
         public void TestGetTaxRateParameters()
         {
             USLocation testLocation = new USLocation(zip, state, city, street);
-            Dictionary<string, string> taxRateData = testLocation.GetTaxRateParameter();
+            Dictionary<string, string> taxRateData = testLocation.GetLocationTaxRateParameter();
 
-            Assert.AreEqual(taxRateData.Count, 5);
+            Assert.AreEqual(5, taxRateData.Count);
             Assert.IsTrue(taxRateData.ContainsKey("zip"));
             Assert.IsTrue(taxRateData.ContainsKey("city"));
             Assert.IsTrue(taxRateData.ContainsKey("street"));

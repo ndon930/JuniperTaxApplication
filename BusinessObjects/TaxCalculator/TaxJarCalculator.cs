@@ -43,25 +43,18 @@ namespace BusinessObjects.TaxCalculator
             };
         }
 
-        public Dictionary<string, string> CalculateOrderTaxes(IOrder order)
-        {
-            Dictionary<string, string> result = new Dictionary<string, string>();
-
-            return result;
-        }
-
         /// <summary>
         /// <inheritdoc>/>
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Missing Zip</exception>
-        public APILocationRatesResponseMessage GetLocationTaxRate(ILocation location)
+        public RateResponse GetLocationTaxRate(ILocation location)
         {
             string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : $"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}";
             try
             {
-                Dictionary<string, string> parameters = location.GetTaxRateParameter();
+                Dictionary<string, string> parameters = location.GetLocationTaxRateParameter();
                 if (!parameters.ContainsKey("zip"))
                 {
                     throw new Exception("Missing Zip in dictionary");
@@ -79,7 +72,7 @@ namespace BusinessObjects.TaxCalculator
                     Log.LogInfo($"Called: GetLocationTaxRate, Data:{uri.Remove(uri.Length - 1, 1)}");
                 }
 
-                APILocationRatesResponseMessage ret = this.Client.SendGet<RateResponse>(uri.Remove(uri.Length - 1, 1)).LocationRates;
+                RateResponse ret = this.Client.SendGet<RateResponse>(uri.Remove(uri.Length - 1, 1));
                 return ret;
             }
             catch (Exception e)
@@ -88,9 +81,34 @@ namespace BusinessObjects.TaxCalculator
                 {
                     Log.LogException(methodName, e.Message);
                 }
-                return new APILocationRatesResponseMessage();
+                return new RateResponse();
             }
            
+        }
+
+        public OrderTaxResponse GetTaxesForOrder(IOrder order)
+        {
+            string methodName = MethodBase.GetCurrentMethod() == null ? "Unknown" : $"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}";
+            try
+            {
+
+                string uri = "taxes";
+                if (Log != null)
+                {
+                    Log.LogInfo($"Called: GetTaxesForOrder");
+                }
+                OrderTaxResponse ret = this.Client.SendPost<OrderTaxResponse>(uri, order.GetJsonObjectForOrderTaxAPICall());
+                return ret;
+            }
+            catch (Exception e)
+            {
+                if (Log != null)
+                {
+                    Log.LogException(methodName, e.Message);
+                }
+                return new OrderTaxResponse();
+            }
+
         }
     }
 }
