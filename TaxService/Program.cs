@@ -1,6 +1,8 @@
-﻿using BusinessObjects.APIResponseMessage;
+﻿using BusinessObjects.APIClients;
+using BusinessObjects.APIResponseMessage;
 using BusinessObjects.Location;
 using BusinessObjects.Log;
+using BusinessObjects.Order;
 using BusinessObjects.TaxCalculator;
 using Newtonsoft.Json;
 using System.Configuration;
@@ -35,4 +37,31 @@ string street = "test";
 FileLog testLog = new FileLog(ConfigurationManager.AppSettings.Get("LogFilePath"), ConfigurationManager.AppSettings.Get("FileName"));
 USLocation testLocation = new USLocation(zip, state, city, street);
 TaxJarCalculator taxCalculator = new TaxJarCalculator(testLog);
-APILocationRatesResponseMessage rsp = taxCalculator.GetLocationTaxRate(testLocation);
+APILocationRatesResponseMessage rsp = taxCalculator.GetLocationTaxRate(testLocation).LocationRates;
+
+
+string APIBaseUrl = ConfigurationManager.AppSettings.Get(ApiClient.TaxJarApiClientConstant.TaxJarAPIBaseURLKey) ?? ApiClient.TaxJarApiClientConstant.DefaultBaseUrl;
+string APIVersion = ConfigurationManager.AppSettings.Get(ApiClient.TaxJarApiClientConstant.TaxJarApiVersionKey) ?? ApiClient.TaxJarApiClientConstant.DefaultApiVersion;
+string APIToken = ConfigurationManager.AppSettings.Get(ApiClient.TaxJarApiClientConstant.TaxJarAPITokenKey) ?? ApiClient.TaxJarApiClientConstant.DefaultApiToken;
+
+OrderLineItem testLineItem = new OrderLineItem()
+{
+    Id = "1",
+    Quantity = 1,
+    TaxCode = "20010",
+    SalesTax = 15,
+    Discount = 0
+};
+
+USLocation fromLocation = new USLocation("92093", "CA", "La Jolla", "9500 Gilman Drive");
+USLocation toLocation = new USLocation("90002", "CA", "Los Angeles", "1335 E 103rd St");
+NexusAddress testNexusAddress = new NexusAddress("92093", "CA", "Main Location", "US", "La Jolla", "9500 Gilman Drive");
+Order testOrder = new Order();
+testOrder.ToLocation = toLocation;
+testOrder.FromLocation = fromLocation;
+testOrder.Amount = 15;
+testOrder.Shipping = (decimal)1.5;
+
+testLog.LogInfo(testOrder.ToString());
+taxCalculator = new TaxJarCalculator(testLog, APIBaseUrl, APIVersion, APIToken);
+APIOrderTaxResponseMessage rspNew = taxCalculator.GetTaxesForOrder(testOrder).OrderRates;

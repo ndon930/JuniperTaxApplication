@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.Location
 {
-    /// <summary>
-    /// Instance of a US based location;
-    /// </summary>
-    public class USLocation : BaseLocation
+    public class Jurisdiction : BaseLocation
     {
-        #region Propeties
+        #region Properties
         [JsonProperty("state")]
         public string State
         {
@@ -27,22 +24,11 @@ namespace BusinessObjects.Location
             set { this.SetLocationData("city", value); }
         }
 
-        [JsonProperty("street")]
-        public string Street
+        [JsonProperty("county")]
+        public string County
         {
-            get { return this.GetLocationData("street"); }
-            set { this.SetLocationData("street", value); }
-        }
-        #endregion
-
-        public USLocation(string zip, string state = "", string city = "", string street = "") : base(zip, "US")
-        {
-            if (!string.IsNullOrEmpty(state))
-                State = state;
-            if (!string.IsNullOrEmpty(city))
-                City = city;
-            if (!string.IsNullOrEmpty(street))
-                Street = street;
+            get { return this.GetLocationData("county"); }
+            set { this.SetLocationData("county", value); }
         }
 
         /// <summary>
@@ -59,10 +45,21 @@ namespace BusinessObjects.Location
             if (!string.IsNullOrEmpty(City))
                 taxRateData.Add("city", City);
 
-            if (!string.IsNullOrEmpty(Street))
-                taxRateData.Add("street", Street);
+            if (!string.IsNullOrEmpty(County))
+                taxRateData.Add("street", County);
 
             return taxRateData;
         }
+        #endregion
+        public Jurisdiction(string country, string zip = "", string state = "", string city = "", string county = "") : base(zip, country)
+        {
+            if (!string.IsNullOrEmpty(state))
+                State = state;
+            if (!string.IsNullOrEmpty(city))
+                City = city;
+            if (!string.IsNullOrEmpty(county))
+                County = county;
+        }
+
     }
 }

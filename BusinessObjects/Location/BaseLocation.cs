@@ -13,53 +13,25 @@ namespace BusinessObjects.Location
 
         public BaseLocation(string zip, string country)
         {
-            if(string.IsNullOrEmpty(zip))
-                throw new Exception("Zip is Required!");
-            else
+            if(!string.IsNullOrEmpty(zip))
                 Zip = zip;
 
             if (!string.IsNullOrEmpty(country))
-            {
-                if (country.Length != 2)
-                {
-                    throw new Exception("Country must be a 2 character length!");
-                }
                 Country = country;
-            }
         }
 
         [JsonProperty("country")]
         public string Country
         {
-            get
-            {
-                if (LocationData.ContainsKey("Country"))
-                    return this.LocationData["Country"];
-                else
-                    return "";
-            }
-
-            set
-            {
-                this.LocationData["Country"] = value;
-            }
+            get { return this.GetLocationData("country"); }
+            set { this.SetLocationData("country", value); }
         }
 
         [JsonProperty("zip")]
         public string Zip
         {
-            get
-            {
-                if (LocationData.ContainsKey("Zip"))
-                    return this.LocationData["Zip"];
-                else
-                    return "";
-            }
-
-            set
-            {
-                this.LocationData["Zip"] = value;
-            }
+            get { return this.GetLocationData("zip"); }
+            set { this.SetLocationData("zip", value); }
         }
 
         /// <summary>
@@ -67,7 +39,7 @@ namespace BusinessObjects.Location
         /// Return Country Code
         /// </summary>
         /// <returns></returns>
-        public virtual Dictionary<string, string> GetTaxRateParameter()
+        public virtual Dictionary<string, string> GetLocationTaxRateParameter()
         {
             Dictionary<string, string> taxRateData = new Dictionary<string, string>();
 
@@ -78,6 +50,30 @@ namespace BusinessObjects.Location
                 taxRateData.Add("zip", Zip);
 
             return taxRateData;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// Return Country Code
+        /// </summary>
+        /// <returns></returns>
+        public string GetLocationData(string key)
+        {
+            if (LocationData.ContainsKey(key))
+                return LocationData[key];
+            else
+                return "";
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="key"><inheritdoc/></param>
+        /// <param name="value"><inheritdoc/></param>
+        /// <returns></returns>
+        public void SetLocationData(string key, string value)
+        {
+            LocationData[key] = value;
         }
     }
 }

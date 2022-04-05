@@ -18,27 +18,17 @@ namespace BusinessObjects.Location
         [JsonProperty("city")]
         public string City
         {
-            get
-            {
-                if (LocationData.ContainsKey("City"))
-                    return this.LocationData["City"];
-                else
-                    return "";
-            }
-
-            set
-            {
-                this.LocationData["City"] = value;
-            }
+            get { return this.GetLocationData("city"); }
+            set { this.SetLocationData("city", value); }
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
         /// <returns></returns>
-        public override Dictionary<string, string> GetTaxRateParameter()
+        public override Dictionary<string, string> GetLocationTaxRateParameter()
         {
-            Dictionary<string, string> taxRateData = base.GetTaxRateParameter();
+            Dictionary<string, string> taxRateData = base.GetLocationTaxRateParameter();
 
             if (!string.IsNullOrEmpty(City))
                 taxRateData.Add("city", City);

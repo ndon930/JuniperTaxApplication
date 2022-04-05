@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.Location
 {
-    /// <summary>
-    /// Instance of a US based location;
-    /// </summary>
-    public class USLocation : BaseLocation
+    public class NexusAddress : BaseLocation
     {
-        #region Propeties
+        #region properties
+        [JsonProperty("id")]
+        public string Id
+        {
+            get { return this.GetLocationData("id"); }
+            set { this.SetLocationData("id", value); }
+        }
+
         [JsonProperty("state")]
         public string State
         {
@@ -20,7 +24,7 @@ namespace BusinessObjects.Location
             set { this.SetLocationData("state", value); }
         }
 
-        [JsonProperty("city")]
+        [JsonProperty("city ")]
         public string City
         {
             get { return this.GetLocationData("city"); }
@@ -33,17 +37,20 @@ namespace BusinessObjects.Location
             get { return this.GetLocationData("street"); }
             set { this.SetLocationData("street", value); }
         }
-        #endregion
 
-        public USLocation(string zip, string state = "", string city = "", string street = "") : base(zip, "US")
+        #endregion 
+        public NexusAddress(string zip, string state = "", string id = "", string country = "", string city = "", string street = "") : base(zip, country)
         {
             if (!string.IsNullOrEmpty(state))
                 State = state;
+            if (!string.IsNullOrEmpty(id))
+                Id = id;
             if (!string.IsNullOrEmpty(city))
                 City = city;
             if (!string.IsNullOrEmpty(street))
                 Street = street;
         }
+
 
         /// <summary>
         /// <inheritdoc/>

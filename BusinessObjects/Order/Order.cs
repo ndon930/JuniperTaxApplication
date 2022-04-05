@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObjects.APIPostObject;
 using BusinessObjects.Location;
+using Newtonsoft.Json;
 
 namespace BusinessObjects.Order
 {
@@ -13,25 +15,223 @@ namespace BusinessObjects.Order
     public class Order : IOrder
     {
         #region Properties
-        public ILocation? Location { get; set; }
-        public ILocation? ToLocation { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ILocation? FromLocation { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Dictionary<string, int>? LineItems { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        #region To location
+        public ILocation? ToLocation { get; set; }
+
+        [JsonProperty("To_country")]
+        public string ToCountry
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("country", ToLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("country", value);
+            }
+        }
+
+        [JsonProperty("to_zip")]
+        public string ToZip
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("zip", ToLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("zip", value);
+            }
+        }
+
+        [JsonProperty("to_state")]
+        public string ToState
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("state", ToLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("state", value);
+            }
+        }
+
+        [JsonProperty("to_street")]
+        public string ToStreet
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("street", ToLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("street", value);
+            }
+        }
+
+        [JsonProperty("to_city")]
+        public string ToCity
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("city", ToLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("city", value);
+            }
+        }
+
         #endregion
 
-        public Order(ILocation location)
+        #region from location
+        public ILocation? FromLocation { get; set; }
+
+        [JsonProperty("from_country")]
+        public string FromCountry
         {
-            this.Location = location;
+            get
+            {
+                return this.GetPropertyValuefromLocation("country", FromLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("country", value);
+            }
+        }
+
+        [JsonProperty("from_zip")]
+        public string FromZip
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("zip", FromLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("zip", value);
+            }
+        }
+
+        [JsonProperty("from_state")]
+        public string FromState
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("state", FromLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("state", value);
+            }
+        }
+
+        [JsonProperty("from_street")]
+        public string FromStreet
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("street", FromLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("street", value);
+            }
+        }
+
+        [JsonProperty("from_city")]
+        public string FromCity
+        {
+            get
+            {
+                return this.GetPropertyValuefromLocation("city", FromLocation);
+            }
+            set
+            {
+                if (FromLocation != null)
+                    FromLocation.SetLocationData("city", value);
+            }
+        }
+
+        #endregion
+
+
+        [JsonProperty("amount")]
+        public decimal Amount { get; set; }
+
+        [JsonProperty("shipping")]
+        public decimal Shipping { get; set; } = 0;
+
+        [JsonProperty("customer_id")]
+        public string CustomerId { get; set; }
+
+        [JsonProperty("exemption_type")]
+        public string ExemptionType { get; set; }
+
+        [JsonProperty("nexus_addresses")]
+        public List<NexusAddress> NexusAddresses { get; set; } = new List<NexusAddress>();
+
+
+        [JsonProperty("line_items")]
+        public List<OrderLineItem> LineItems { get; set; } = new List<OrderLineItem>();
+        #endregion
+
+        public Order()
+        {
+
         }
 
         /// <summary>
-        /// Return the Calcuated Taxes of the Order
+        /// Null check before getting property;
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        private string GetPropertyValuefromLocation(string property, ILocation? location)
+        {
+            if (location != null)
+                return location.GetLocationData(property);
+            else
+                return string.Empty;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
         /// </summary>
         /// <returns></returns>
-        public double CalculateTaxes()
+        public object GetJsonObjectForOrderTaxAPICall()
         {
-            double retValue = 0;
-            return retValue;
+            TaxJarOrderPostData data = new TaxJarOrderPostData()
+            {
+                ToCountry = this.ToCountry,
+                ToZip = this.ToZip,
+                ToState = this.ToState,
+                ToCity = this.ToCity,
+                ToStreet = this.ToStreet,
+                FromCountry = this.FromCountry,
+                FromZip = this.FromZip,
+                FromState = this.FromState,
+                FromCity = this.FromCity,
+                FromStreet = this.FromStreet,
+                Amount = this.Amount,
+                Shipping = this.Shipping,
+                CustomerId = this.CustomerId,
+                ExemptionType = this.ExemptionType,
+                NexusAddresses = this.NexusAddresses,
+                LineItems = this.LineItems
+            };
+
+            return data;
         }
     }
 }
